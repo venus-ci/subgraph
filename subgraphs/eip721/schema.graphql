@@ -1,0 +1,74 @@
+type Blockchain @entity {
+  id: ID!
+  totalCollections: BigInt!
+  totalTokens: BigInt!
+  totalTransactions: BigInt!
+}
+"""
+EIP-721 Collection(s)
+"""
+type Collection @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  tokens: [Token!]! @derivedFrom(field: "collection")
+  totalTokens: BigInt!
+  transactions: [Transaction!]! @derivedFrom(field: "collection")
+  totalTransactions: BigInt!
+  block: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+"""
+EIP-721 Owner(s)
+"""
+type Owner @entity {
+  id: ID!
+  tokens: [Token!]! @derivedFrom(field: "owner")
+  totalTokens: BigInt!
+  totalTokensMinted: BigInt!
+  fromTransactions: [Transaction!]! @derivedFrom(field: "from")
+  toTransactions: [Transaction!]! @derivedFrom(field: "to")
+  totalTransactions: BigInt!
+  block: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+"""
+EIP-721 Token(s)
+"""
+type Token @entity {
+  id: ID!
+  collection: Collection!
+  tokenID: BigInt!
+  tokenURI: String
+  minter: Owner!
+  owner: Owner!
+  burned: Boolean!
+  transactions: [Transaction!]! @derivedFrom(field: "token")
+  totalTransactions: BigInt!
+  block: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+"""
+EIP-721 Transaction(s)
+"""
+type Transaction @entity {
+  id: ID!
+  hash: Bytes!
+  "Sender"
+  from: Owner!
+  "Receiver"
+  to: Owner!
+  collection: Collection!
+  token: Token!
+  gasLimit: BigInt!
+  "Gas Price (in wei)"
+  gasPrice: BigDecimal!
+  block: BigInt!
+  timestamp: BigInt!
+}

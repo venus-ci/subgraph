@@ -1,0 +1,305 @@
+"""
+Collection
+"""
+type Collection @entity {
+  "ID (collection address)"
+  id: ID!
+
+  "Total number of transactions"
+  totalTransactions: BigInt!
+
+  "Total number of taker bid transactions"
+  totalTakerBidTransactions: BigInt!
+
+  "Total number of taker ask transactions"
+  totalTakerAskTransactions: BigInt!
+
+  "Total volume of collection (in ETH)"
+  totalVolume: BigDecimal!
+
+  "Total taker bid volume (in ETH)"
+  totalTakerBidVolume: BigDecimal!
+
+  "Total taker ask volume (in ETH)"
+  totalTakerAskVolume: BigDecimal!
+
+  "Total royalty paid (in ETH)"
+  totalRoyaltyPaid: BigDecimal!
+
+  "Daily history"
+  dayData: [CollectionDailyData!]! @derivedFrom(field: "collection")
+
+  "Royalty transfers"
+  royaltyTransfers: [RoyaltyTransfer!]! @derivedFrom(field: "collection")
+
+  "Transactions"
+  transactions: [Transaction!]! @derivedFrom(field: "collection")
+}
+
+"""
+ExecutionStrategy
+"""
+type ExecutionStrategy @entity {
+  "ID (execution strategy address)"
+  id: ID!
+
+  "Protocol fee (e.g., 500 --> 5%)"
+  protocolFee: BigInt!
+
+  "Total number of transactions"
+  totalTransactions: BigInt!
+
+  "Total number of taker bid transactions"
+  totalTakerBidTransactions: BigInt!
+
+  "Total number of taker ask transactions"
+  totalTakerAskTransactions: BigInt!
+
+  "Total volume (in ETH)"
+  totalVolume: BigDecimal!
+
+  "Total taker bid volume (in ETH)"
+  totalTakerBidVolume: BigDecimal!
+
+  "Total taker ask volume (in ETH)"
+  totalTakerAskVolume: BigDecimal!
+
+  "Daily history"
+  dayData: [ExecutionStrategyDailyData!]! @derivedFrom(field: "strategy")
+
+  "Transactions"
+  transactions: [Transaction!]! @derivedFrom(field: "strategy")
+}
+
+"""
+User
+"""
+type User @entity {
+  "ID (user address)"
+  id: ID!
+
+  "Total number of transactions"
+  totalTransactions: BigInt!
+
+  "Total ask volume (in ETH)"
+  totalAskVolume: BigDecimal!
+
+  "Total bid volume (in ETH)"
+  totalBidVolume: BigDecimal!
+
+  "Total maker volume (in ETH)"
+  totalMakerVolume: BigDecimal!
+
+  "Total taker volume (in ETH)"
+  totalTakerVolume: BigDecimal!
+
+  "Total volume (in ETH)"
+  totalVolume: BigDecimal!
+
+  "Total royalty collected (in ETH)"
+  totalRoyaltyCollected: BigDecimal!
+
+  "Daily history"
+  dayData: [UserDailyData!]! @derivedFrom(field: "user")
+
+  "Transactions where user is the maker side"
+  makerTransactions: [Transaction!]! @derivedFrom(field: "maker")
+
+  "Transactions where user is the taker side"
+  takerTransactions: [Transaction!]! @derivedFrom(field: "taker")
+
+  "Royalty payments collected by the user (as recipient)"
+  royaltyPayments: [RoyaltyTransfer!]! @derivedFrom(field: "user")
+}
+
+"""
+CollectionDailyData
+"""
+type CollectionDailyData @entity {
+  "ID"
+  id: ID!
+
+  "Start date (timestamp)"
+  date: BigInt!
+
+  "Collection"
+  collection: Collection!
+
+  "Daily unique transactions"
+  dailyTransactions: BigInt!
+
+  "Daily unique taker bid transactions"
+  dailyTakerBidTransactions: BigInt!
+
+  "Daily unique taker ask transactions"
+  dailyTakerAskTransactions: BigInt!
+
+  "Daily volume (in ETH)"
+  dailyVolume: BigDecimal!
+
+  "Daily taker bid volume (in ETH)"
+  dailyTakerBidVolume: BigDecimal!
+
+  "Daily taker ask volume (in ETH)"
+  dailyTakerAskVolume: BigDecimal!
+
+  "Daily volume (in ETH) excluding zero-fee strategy"
+  dailyVolumeExcludingZeroFee: BigDecimal!
+
+  "Royalty payment (in ETH)"
+  dailyRoyalty: BigDecimal!
+}
+
+"""
+ExchangeDailyData
+"""
+type ExchangeDailyData @entity {
+  "ID"
+  id: ID!
+
+  "Start date (timestamp)"
+  date: BigInt!
+
+  "Daily unique users"
+  dailyUsers: BigInt!
+
+  "Daily unique collections traded"
+  dailyCollections: BigInt!
+
+  "Daily unique transactions"
+  dailyTransactions: BigInt!
+
+  "Daily taker ask transactions"
+  dailyTakerBidTransactions: BigInt!
+
+  "Daily taker ask transactions"
+  dailyTakerAskTransactions: BigInt!
+
+  "Daily volume (in ETH)"
+  dailyVolume: BigDecimal!
+
+  "Daily taker bid volume (in ETH)"
+  dailyTakerBidVolume: BigDecimal!
+
+  "Daily taker ask volume (in ETH)"
+  dailyTakerAskVolume: BigDecimal!
+
+  "Daily volume (in ETH) excluding zero-fee strategy"
+  dailyVolumeExcludingZeroFee: BigDecimal!
+}
+
+"""
+ExecutionStrategyDailyData
+"""
+type ExecutionStrategyDailyData @entity {
+  "ID"
+  id: ID!
+
+  "Execution strategy"
+  strategy: ExecutionStrategy!
+
+  "Start date (timestamp)"
+  date: BigInt!
+
+  "Daily unique transactions"
+  dailyTransactions: BigInt!
+
+  "Daily unique taker bid transactions"
+  dailyTakerBidTransactions: BigInt!
+
+  "Daily unique taker bid transactions"
+  dailyTakerAskTransactions: BigInt!
+
+  "Daily volume (in ETH)"
+  dailyVolume: BigDecimal!
+
+  "Daily taker bid volume (in ETH)"
+  dailyTakerBidVolume: BigDecimal!
+
+  "Daily taker ask volume (in ETH)"
+  dailyTakerAskVolume: BigDecimal!
+}
+
+"""
+UserDailyData
+"""
+type UserDailyData @entity {
+  "ID"
+  id: ID!
+
+  "Start date (timestamp)"
+  date: BigInt!
+
+  "User"
+  user: User!
+
+  "Daily unique transactions"
+  dailyTransactions: BigInt!
+
+  "Daily volume (in ETH)"
+  dailyVolume: BigDecimal!
+
+  "Daily volume (in ETH) excluding zero-fee strategy"
+  dailyVolumeExcludingZeroFee: BigDecimal!
+}
+
+"""
+RoyaltyTransfer
+"""
+type RoyaltyTransfer @entity {
+  "ID"
+  id: ID!
+
+  "Date (timestamp)"
+  date: BigInt!
+
+  "Block number"
+  block: BigInt!
+
+  "Collection"
+  collection: Collection!
+
+  "TokenId"
+  tokenId: BigInt!
+
+  "User"
+  user: User!
+
+  "Amount received (in ETH)"
+  amount: BigDecimal!
+}
+
+"""
+Transaction
+"""
+type Transaction @entity {
+  "ID"
+  id: ID!
+
+  "Date (timestamp)"
+  date: BigInt!
+
+  "Block number"
+  block: BigInt!
+
+  "Collection"
+  collection: Collection!
+
+  "Whether the transaction is a takerAsk"
+  isTakerAsk: Boolean!
+
+  "Execution strategy"
+  strategy: ExecutionStrategy!
+
+  "TokenId"
+  tokenId: BigInt!
+
+  "Price (in ETH)"
+  price: BigDecimal!
+
+  "Maker user"
+  maker: User!
+
+  "Taker user"
+  taker: User!
+}

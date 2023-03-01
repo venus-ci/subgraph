@@ -1,0 +1,87 @@
+"""
+Blockchain
+"""
+type Blockchain @entity {
+  id: ID!
+  totalCollections: BigInt!
+  totalTokens: BigInt!
+  totalTransactions: BigInt!
+}
+
+"""
+EIP-1155 Collection(s)
+"""
+type Collection @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  tokens: [Token!]! @derivedFrom(field: "collection")
+  totalTokens: BigInt!
+  transactions: [Transaction!]! @derivedFrom(field: "collection")
+  totalTransactions: BigInt!
+  block: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+"""
+EIP-1155 Owner(s)
+"""
+type Owner @entity {
+  id: ID!
+  tokens: [Token!]! @derivedFrom(field: "owner")
+  totalTokens: BigInt!
+  totalTokensMinted: BigInt!
+  fromTransactions: [Transaction!]! @derivedFrom(field: "from")
+  toTransactions: [Transaction!]! @derivedFrom(field: "to")
+  totalTransactions: BigInt!
+  block: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+"""
+EIP-1155 Token(s)
+"""
+type Token @entity {
+  id: ID!
+  collection: Collection!
+  tokenID: BigInt!
+  tokenURI: String
+  minter: Owner!
+  owner: Owner!
+  burned: Boolean!
+  transactions: [Transaction!]! @derivedFrom(field: "token")
+  totalTransactions: BigInt!
+  block: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+"""
+Transaction Type
+"""
+enum TransactionType {
+  Single
+  Batch
+}
+
+"""
+EIP-1155 Transaction(s)
+"""
+type Transaction @entity {
+  id: ID!
+  hash: Bytes!
+  "Sender"
+  from: Owner!
+  "Receiver"
+  to: Owner!
+  collection: Collection!
+  token: Token!
+  "Type"
+  type: TransactionType!
+  gasLimit: BigInt!
+  gasPrice: BigDecimal!
+  block: BigInt!
+  timestamp: BigInt!
+}

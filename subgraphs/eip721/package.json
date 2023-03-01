@@ -1,0 +1,15 @@
+{
+  "name": "eip721",
+  "description": "LooksRare Subgraph",
+  "version": "1.0.0",
+  "repository": "git@github.com:looksrare/rare-subgraph.git",
+  "author": "LooksRare",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen subgraph.yaml",
+    "build:goerli": "graph build subgraph.yaml --network goerli",
+    "build:mainnet": "graph build subgraph.yaml --network mainnet",
+    "deploy:goerli": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus --network goerli",
+    "deploy:mainnet": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus --network mainnet"
+  }
+}
