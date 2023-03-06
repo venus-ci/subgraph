@@ -11,5 +11,8 @@
     "build:mainnet": "graph deploy --studio venus-erc1155",
     "deploy:goerli": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus-erc115 --network goerli",
     "deploy:mainnet": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus-erc115 --network mainnet"
+  },
+  "dependencies": {
+    "assemblyscript-regex": "^1.6.4"
   }
 }

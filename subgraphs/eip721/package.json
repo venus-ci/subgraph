@@ -8,8 +8,13 @@
   "scripts": {
     "codegen": "graph codegen subgraph.yaml",
     "build:goerli": "graph build subgraph.yaml --network goerli",
-    "build:mainnet": "graph build subgraph.yaml --network mainnet",
+    "build:mainnet": "graph deploy --studio venus-erc721",
     "deploy:goerli": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus --network goerli",
-    "deploy:mainnet": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus --network mainnet"
+    "deploy:mainnet": "graph deploy --node https://api.studio.thegraph.com/deploy/  --studio venus --network mainnet",
+    "test": "graph test -r"
+
+  },
+  "devDependencies": {
+    "matchstick-as": "^0.5.1"
   }
 }

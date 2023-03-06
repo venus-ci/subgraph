@@ -1,8 +1,11 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, dataSource, json, store, log } from "@graphprotocol/graph-ts";
 import { Blockchain, Collection, Owner, Token, Transaction } from "../generated/schema";
-import { Transfer } from "../generated/EIP721/EIP721";
+import { TokenMetadata as TokenMetadataTemplate } from "../generated/templates";
+import { Transfer, EIP721 } from "../generated/EIP721/EIP721";
+import { Match, RegExp } from "assemblyscript-regex";
 import { toBigDecimal } from "../../../helpers/utils";
 import { fetchName, fetchSymbol, fetchTokenURI } from "./utils/eip721";
+import { logStore } from "matchstick-as/assembly/store";
 
 export function handleTransfer(event: Transfer): void {
   let blockchain = Blockchain.load("ETH");
@@ -80,7 +83,22 @@ export function handleTransfer(event: Transfer): void {
     token = new Token(event.address.toHex() + "-" + event.params.tokenId.toString());
     token.collection = collection.id;
     token.tokenID = event.params.tokenId;
-    token.tokenURI = fetchTokenURI(event.address, event.params.tokenId);
+    const contract = EIP721.bind(event.address);
+
+    const uriResult = contract.try_tokenURI(token.tokenID);
+    if (!uriResult.reverted) {
+      let regex = new RegExp("(Q[a-zA-Z0-9]{45})", "g");
+      let match: Match | null = regex.exec(uriResult.value);
+
+      if (match != null) {
+        const ipfsHash = match.matches[0] + "/" + token.tokenID.toString() + ".json";
+        token.metadata = ipfsHash;
+        TokenMetadataTemplate.create(ipfsHash);
+      }
+
+      token.tokenURI = uriResult.value;
+    }
+
     token.minter = to.id;
     token.owner = to.id;
     token.burned = false;
@@ -90,6 +108,7 @@ export function handleTransfer(event: Transfer): void {
     token.updatedAt = event.block.timestamp;
     token.save();
 
+    //logStore();
     // Owner - as Receiver
     to.totalTokensMinted = to.totalTokensMinted.plus(BigInt.fromI32(1));
     to.save();
