@@ -44,14 +44,27 @@ type Token @entity {
   collection: Collection!
   tokenID: BigInt!
   tokenURI: String
+  metadata: TokenMetadata
   minter: Owner!
   owner: Owner!
   burned: Boolean!
+  image: String
+  externalURL: String
+  name: String
+  description: String
   transactions: [Transaction!]! @derivedFrom(field: "token")
   totalTransactions: BigInt!
   block: BigInt!
   createdAt: BigInt!
   updatedAt: BigInt!
+}
+
+type TokenMetadata @entity {
+  id: ID!
+  image: String
+  externalURL: String
+  name: String
+  description: String
 }
 
 """

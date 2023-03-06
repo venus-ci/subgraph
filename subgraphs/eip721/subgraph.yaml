@@ -6,13 +6,13 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: EIP721
-    network: mainnet
+    network: goerli
     source:
       abi: EIP721
-      startBlock: 4300082
+      startBlock: 7433573
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./mappings/index.ts
       entities:
@@ -27,3 +27,17 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+templates:
+  - name: TokenMetadata
+    kind: file/ipfs
+    network: goerli
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./mappings/utils/handleMetadata.ts
+      handler: handleMetadata
+      entities:
+        - TokenMetadata
+      abis:
+        - name: EIP721
+          file: ./abis/EIP721.json
