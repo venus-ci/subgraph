@@ -15,7 +15,7 @@ type Collection @entity {
   id: ID!
   name: String!
   symbol: String!
-  owner: Owner!
+  owner: Owner
   tokens: [Token!]! @derivedFrom(field: "collection")
   totalTokens: BigInt!
   transactions: [Transaction!]! @derivedFrom(field: "collection")
