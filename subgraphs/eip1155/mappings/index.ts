@@ -17,27 +17,6 @@ export function handleTransferBatch(event: TransferBatch): void {
   blockchain.totalTransactions = blockchain.totalTransactions.plus(BigInt.fromI32(1));
   blockchain.save();
 
-  let collection = Collection.load(event.address.toHex());
-  if (collection === null) {
-    // Collection
-    collection = new Collection(event.address.toHex());
-    collection.name = fetchName(event.address);
-    collection.symbol = fetchSymbol(event.address);
-    collection.totalTokens = BigInt.zero();
-    collection.totalTransactions = BigInt.zero();
-    collection.block = event.block.number;
-    collection.createdAt = event.block.timestamp;
-    collection.updatedAt = event.block.timestamp;
-    collection.save();
-
-    // Blockchain
-    blockchain.totalCollections = blockchain.totalCollections.plus(BigInt.fromI32(1));
-    blockchain.save();
-  }
-  collection.totalTransactions = collection.totalTransactions.plus(BigInt.fromI32(1));
-  collection.updatedAt = event.block.timestamp;
-  collection.save();
-
   let from = Owner.load(event.params._from.toHex());
   if (from === null) {
     // Owner - as Sender
@@ -73,6 +52,28 @@ export function handleTransferBatch(event: TransferBatch): void {
   to.totalTransactions = to.totalTransactions.plus(BigInt.fromI32(1));
   to.updatedAt = event.block.timestamp;
   to.save();
+
+  let collection = Collection.load(event.address.toHex());
+  if (collection === null) {
+    // Collection
+    collection = new Collection(event.address.toHex());
+    collection.name = fetchName(event.address);
+    collection.symbol = fetchSymbol(event.address);
+    collection.totalTokens = BigInt.zero();
+    collection.totalTransactions = BigInt.zero();
+    collection.block = event.block.number;
+    collection.createdAt = event.block.timestamp;
+    collection.updatedAt = event.block.timestamp;
+    collection.owner = to.id;
+    collection.save();
+
+    // Blockchain
+    blockchain.totalCollections = blockchain.totalCollections.plus(BigInt.fromI32(1));
+    blockchain.save();
+  }
+  collection.totalTransactions = collection.totalTransactions.plus(BigInt.fromI32(1));
+  collection.updatedAt = event.block.timestamp;
+  collection.save();
 
   const ids = event.params._ids;
   for (let i = 0; i < ids.length; i++) {

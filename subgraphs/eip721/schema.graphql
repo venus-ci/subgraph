@@ -11,6 +11,7 @@ type Collection @entity {
   id: ID!
   name: String!
   symbol: String!
+  owner: Owner!
   tokens: [Token!]! @derivedFrom(field: "collection")
   totalTokens: BigInt!
   transactions: [Transaction!]! @derivedFrom(field: "collection")
@@ -26,6 +27,7 @@ EIP-721 Owner(s)
 type Owner @entity {
   id: ID!
   tokens: [Token!]! @derivedFrom(field: "owner")
+  collection: [Collection!]! @derivedFrom(field: "owner")
   totalTokens: BigInt!
   totalTokensMinted: BigInt!
   fromTransactions: [Transaction!]! @derivedFrom(field: "from")
