@@ -23,6 +23,7 @@ type Collection @entity {
   block: BigInt!
   createdAt: BigInt!
   updatedAt: BigInt!
+  cursor: String!
 }
 
 """
@@ -58,6 +59,7 @@ type Token @entity {
   block: BigInt!
   createdAt: BigInt!
   updatedAt: BigInt!
+  cursor: String!
 }
 
 """
