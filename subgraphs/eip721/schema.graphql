@@ -19,7 +19,10 @@ type Collection @entity {
   block: BigInt!
   createdAt: BigInt!
   updatedAt: BigInt!
-  cursor: String!
+  cursor: BigInt!
+  cursorStr: String!
+  logIndex: BigInt!
+  blockNumLog: BigDecimal!
 }
 
 """
@@ -55,7 +58,10 @@ type Token @entity {
   block: BigInt!
   createdAt: BigInt!
   updatedAt: BigInt!
-  cursor: String!
+  cursor: BigInt!
+  cursorStr: String!
+  logIndex: BigInt!
+  blockNumLog: BigDecimal!
 }
 
 """

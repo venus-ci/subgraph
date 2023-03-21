@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { Blockchain, Collection, Owner, Token, Transaction } from "../generated/schema";
 import { Transfer } from "../generated/EIP721/EIP721";
 import { toBigDecimal } from "../../../helpers/utils";
@@ -65,7 +65,12 @@ export function handleTransfer(event: Transfer): void {
     collection.createdAt = event.block.timestamp;
     collection.updatedAt = event.block.timestamp;
     collection.owner = to.id;
-    collection.cursor = event.block.number.toString() + "-" + event.address.toHex();
+    collection.cursor = BigInt.fromString(event.block.number.toString() + "" + event.transactionLogIndex.toString());
+    collection.logIndex = event.transactionLogIndex;
+    collection.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
+    collection.blockNumLog = event.block.number
+      .toBigDecimal()
+      .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
     collection.save();
 
     // Blockchain
@@ -73,8 +78,12 @@ export function handleTransfer(event: Transfer): void {
     blockchain.save();
   }
   collection.totalTransactions = collection.totalTransactions.plus(BigInt.fromI32(1));
+  collection.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
   collection.updatedAt = event.block.timestamp;
-  collection.cursor = event.block.number.toString() + "-" + event.address.toHex();
+  collection.logIndex = event.transactionLogIndex;
+  collection.blockNumLog = event.block.number
+    .toBigDecimal()
+    .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
   collection.save();
 
   let token = Token.load(event.address.toHex() + "-" + event.params.tokenId.toString());
@@ -91,7 +100,13 @@ export function handleTransfer(event: Transfer): void {
     token.block = event.block.number;
     token.createdAt = event.block.timestamp;
     token.updatedAt = event.block.timestamp;
-    token.cursor = event.block.number.toString() + "-" + event.address.toHex() + "-" + event.params.tokenId.toString();
+    token.cursor = BigInt.fromString(event.block.number.toString() + "" + event.transactionLogIndex.toString());
+    token.blockNumLog = event.block.number
+      .toBigDecimal()
+      .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
+    token.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
+
+    token.logIndex = event.transactionLogIndex;
     token.save();
 
     // Owner - as Receiver
@@ -108,7 +123,13 @@ export function handleTransfer(event: Transfer): void {
   }
   token.owner = to.id;
   token.burned = event.params.to.equals(Address.zero());
-  token.cursor = event.block.number.toString() + "-" + event.address.toHex() + "-" + event.params.tokenId.toString();
+  token.cursor = BigInt.fromString(event.block.number.toString() + "" + event.transactionLogIndex.toString());
+  token.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
+
+  token.blockNumLog = event.block.number
+    .toBigDecimal()
+    .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
+  token.logIndex = event.transactionLogIndex;
 
   token.totalTransactions = token.totalTransactions.plus(BigInt.fromI32(1));
   token.updatedAt = event.block.timestamp;
