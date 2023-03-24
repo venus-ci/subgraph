@@ -6,10 +6,10 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: EIP721
-    network: goerli
+    network: mainnet
     source:
       abi: EIP721
-      startBlock: 8320281
+      startBlock: 4300082
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

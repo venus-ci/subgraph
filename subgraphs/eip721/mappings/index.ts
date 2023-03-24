@@ -65,9 +65,6 @@ export function handleTransfer(event: Transfer): void {
     collection.createdAt = event.block.timestamp;
     collection.updatedAt = event.block.timestamp;
     collection.owner = to.id;
-    collection.cursor = BigInt.fromString(event.block.number.toString() + "" + event.transactionLogIndex.toString());
-    collection.logIndex = event.transactionLogIndex;
-    collection.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
     collection.blockNumLog = event.block.number
       .toBigDecimal()
       .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
@@ -78,9 +75,7 @@ export function handleTransfer(event: Transfer): void {
     blockchain.save();
   }
   collection.totalTransactions = collection.totalTransactions.plus(BigInt.fromI32(1));
-  collection.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
   collection.updatedAt = event.block.timestamp;
-  collection.logIndex = event.transactionLogIndex;
   collection.blockNumLog = event.block.number
     .toBigDecimal()
     .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
@@ -100,13 +95,9 @@ export function handleTransfer(event: Transfer): void {
     token.block = event.block.number;
     token.createdAt = event.block.timestamp;
     token.updatedAt = event.block.timestamp;
-    token.cursor = BigInt.fromString(event.block.number.toString() + "" + event.transactionLogIndex.toString());
     token.blockNumLog = event.block.number
       .toBigDecimal()
       .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
-    token.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
-
-    token.logIndex = event.transactionLogIndex;
     token.save();
 
     // Owner - as Receiver
@@ -123,13 +114,9 @@ export function handleTransfer(event: Transfer): void {
   }
   token.owner = to.id;
   token.burned = event.params.to.equals(Address.zero());
-  token.cursor = BigInt.fromString(event.block.number.toString() + "" + event.transactionLogIndex.toString());
-  token.cursorStr = event.block.number.toString() + "" + event.transactionLogIndex.toString();
-
   token.blockNumLog = event.block.number
     .toBigDecimal()
     .plus(BigDecimal.fromString(event.logIndex.toString()).div(BigDecimal.fromString("1000000000")));
-  token.logIndex = event.transactionLogIndex;
 
   token.totalTransactions = token.totalTransactions.plus(BigInt.fromI32(1));
   token.updatedAt = event.block.timestamp;
